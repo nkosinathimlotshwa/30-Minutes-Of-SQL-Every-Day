@@ -78,13 +78,13 @@ ORDER BY CustomerId DESC;
 	9. Write a query in SQL to retrieve total quantity of each productid which are in shelf of 'A' or 'C' or 'H'. 
 	Filter the results for sum quantity is more than 500. 
 	Return productid and sum of the quantity. Sort the results according to the productid in ascending order.
-
+*/
 	SELECT ProductId, SUM(Quantity) AS TotalQuantity
 	FROM Production.ProductionInventory
 	WHERE ProductId IN ('A', 'C', 'H')
 	ORDER BY ProductID ASC;
 
-	Corrections 
+	/* Corrections */ 
 
 	SELECT ProductId, SUM(Quantity) AS TotalQuantity
 	FROM Production.ProductionInventory
@@ -92,25 +92,24 @@ ORDER BY CustomerId DESC;
 	GROUP BY ProductId 
 	HAVING TotalQuantity > 500
 	ORDER BY ProductID ASC;
-*/
+
 
 /*
 	10.  From the following table write a query in SQL to find the total quantity for a group of locationid multiplied by 10.
-	
+*/
 	SELECT SUM(LocationId) * 10 AS TotalQuantity
 	FROM Production.ProductInventory
 
-	Corrections
+	/* Corrections */
 	SELECT SUM(Quantity) AS TotalQuantity
 	FROM Production.ProductInventory
 	GROUP BY (LocationId * 10);
-*/
 
 /*
 	11. From the following tables write a query in SQL to find the persons whose last name starts with letter 'L'. 
 		Return BusinessEntityID, FirstName, LastName, and PhoneNumber. 
 		Sort the result on lastname and firstname.
-
+*/
 	SELECT BusinessEntityID, FirstName, LastName, PhoneNumber AS PersonPhone
 	FROM Person.PersonPhone ph
 	WHERE LastName LIKE 'L%'
@@ -118,14 +117,14 @@ ORDER BY CustomerId DESC;
 		ON BusinessEntityID ph = BusinessEntityID pp
 	ORDER BY LastName, FirstName
 
-	Corrections
+	/* Corrections */
 	SELECT p.BusinessEntityID, FirstName, LastName, PhoneNumber AS PersonPhone
 	FROM Person.Person p
 	INNER JOIN Person.PersonPhone ph
 		ON p.BusinessEntityID = ph.BusinessEntityID
 	WHERE LIKE 'L%'
 	ORDER BY LastName, FirstName;
-*/
+
 
 /*
 	From the following table write a query in SQL to find the sum of subtotal column. 
@@ -133,47 +132,40 @@ ORDER BY CustomerId DESC;
 	Roll up the results into subtotal and running total. 
 	Return salespersonid, customerid and sum of subtotal column i.e. sum_subtotal.
 	Sales.SalesOrderHeader
-
+*/
 	SELECT DISTINCT SalesPersonID, DISTINCT CustomerID, SUM(SubTotal) AS SumSubTotal
 	FROM Sales.SalesOrderHeader
 	GROUP BY SalesPersonID, CustomerID;
 
-	Corrections
+	/* Corrections */
 	SELECT SalesPersonID, CustomerID, SUM(SubTotal) AS SumSubTotal
 	FROM Sales.SalesOrderHeader s
 	GROUP BY ROLLUP (SalesPersonID, CustomerID)
-*/
+
 
 /*
 	13. From the following table write a query in SQL to find 
 		the sum of the quantity of all combination of group of distinct locationid and shelf column. 
 		Return locationid, shelf and sum of quantity as TotalQuantity.
-
+*/
 		SELECT LocationID, Shelf, SUM(Quantity) AS TotalQuantity
 		FROM Production.ProductionInventory pi
 		GROUP BY CUBE (LocationID, Shelf)
-
-	I found a way of achieving the same result but which one is more used between
-	cube, grouping sets
-	SELECT 
-		CASE WHEN GROUPING_ID(LocationId, S)
-*/
 
 /*
 	14. From the following table write a query in SQL to find the sum of the quantity with subtotal for each locationid. 
 		Group the results for all combination of distinct locationid and shelf column. 
 		Rolls up the results into subtotal and running total. Return locationid, shelf and sum of quantity as TotalQuantity.
-
+*/
 		SELECT LocationID, Shelf, SUM(Quantity) AS TotalQuantity
 		FROM Production.ProductionInventory
 		GROUP BY CUBE (LocationID, Shelf)
 		ROLLUP(LocationID, Shelf)
 
-		Corrections 
+		/* Corrections */
 		SELECT LocationID, Shelf, SUM(Quantity) AS TotalaQuantity
 		FROM Production.ProductionInventory
 		GROUP BY GROUPING SETS (ROLLUP(LocationID, Shelf), CUBE(LocationID, Shelf));
-*/
 
 /*
 	15. From the following table write a query in SQL to 
